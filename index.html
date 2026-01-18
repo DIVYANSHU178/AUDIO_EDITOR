@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aurora Wave Editor</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- EmailJS client SDK (required for contact/feedback mail) -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script> 
+  <script>
+    (function() {
+      emailjs.init({
+        publicKey: "FSUsupQinQ60YBgO9" 
+      });
+    })();
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top navigation -->
+    <header class="site-header">
+      <div class="logo">Aurora<span>Wave</span></div>
+      <nav class="nav">
+        <a href="#hero">Home</a>
+        <a href="#editor">Editor</a>
+        <a href="#contact-feedback">Contact</a>
+      </nav>
+    </header>
+
+    <!-- Hero / landing -->
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <h1>Browser‑based Audio Editor</h1>
+        <p>Edit, trim, loop and enhance your audio directly in the browser with a clean, distraction‑free interface.</p>
+        <button id="open-editor-btn" class="primary-btn">
+          Open Editor
+        </button>
+      </div>
+    </section>
+
+    <!-- Editor -->
+    <section id="editor" class="editor-section">
+      <h2>Wave Editor</h2>
+      <p class="section-subtitle">
+        Import an audio file, then use selection, loop and effects to shape your sound using the Web Audio API.
+      </p>
+
+      <div class="editor-top-bar">
+        <div class="file-group">
+          <label class="file-label">
+            <span>Import audio</span>
+            <input type="file" id="file-input" accept="audio/*" />
+          </label>
+          <button id="btn-export" class="secondary-btn" disabled>Export selection</button>
+        </div>
+
+        <div class="time-group">
+          <span id="current-time">00:00:000</span>
+          <span>/</span>
+          <span id="total-time">00:00:000</span>
+        </div>
+      </div>
+
+      <div class="transport-row">
+        <button id="btn-stop" class="icon-btn">⏹</button>
+        <button id="btn-play" class="icon-btn">▶</button>
+        <button id="btn-pause" class="icon-btn">⏸</button>
+        <button id="btn-rewind" class="icon-btn">⏮</button>
+        <button id="btn-forward" class="icon-btn">⏭</button>
+        <button id="btn-loop" class="toggle-btn">Loop: Off</button>
+      </div>
+
+      <div class="wave-container">
+        <div class="wave-header">
+          <span class="track-name">Track 1</span>
+          <span class="channel-labels">L / R</span>
+        </div>
+        <div class="canvas-wrapper">
+          <canvas id="waveform-canvas"></canvas>
+          <div class="playhead" id="playhead"></div>
+          <div class="selection-overlay" id="selection-overlay"></div>
+        </div>
+      </div>
+
+      <div class="editor-bottom-bar">
+        <div class="zoom-block">
+          <label>Zoom</label>
+          <input type="range" id="zoom-range" min="1" max="400" value="1" />
+        </div>
+        <div class="selection-info">
+          <span>Start: <strong id="sel-start">--:--:---</strong></span>
+          <span>End: <strong id="sel-end">--:--:---</strong></span>
+          <span>Length: <strong id="sel-duration">--:--:---</strong></span>
+        </div>
+        <div class="trim-block">
+          <button id="btn-trim" class="secondary-btn" disabled>Trim to selection</button>
+        </div>
+      </div>
+
+      <div class="mixer-panel">
+        <div class="control-column">
+          <h3>Output</h3>
+          <label>Volume
+            <input type="range" id="volume-range" min="0" max="1" step="0.01" value="1" />
+          </label>
+          <label>Speed
+            <input type="range" id="speed-range" min="0.5" max="2" step="0.01" value="1" />
+          </label>
+        </div>
+
+        <div class="control-column">
+          <h3>Filter</h3>
+          <label>Type
+            <select id="filter-type">
+              <option value="none">None</option>
+              <option value="lowpass">Low‑pass</option>
+              <option value="highpass">High‑pass</option>
+            </select>
+          </label>
+          <label>Frequency
+            <input type="range" id="filter-frequency" min="200" max="8000" value="2000" />
+          </label>
+          <label>Q
+            <input type="range" id="filter-q" min="0.1" max="20" step="0.1" value="1" />
+          </label>
+        </div>
+
+        <div class="control-column hints">
+          <h3>Shortcuts</h3>
+          <ul>
+            <li>Space – Play / pause</li>
+            <li>← / → – Seek ±1 s</li>
+            <li>Drag on waveform – Select region</li>
+            <li>Double‑click – Clear selection</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact + Feedback side by side -->
+    <section id="contact-feedback" class="contact-feedback-wrapper">
+      <div id="contact" class="contact-section">
+        <h2>Contact</h2>
+        <p>If you have questions or feature requests, reach out here.</p>
+        <form id="contact-form" class="card-form">
+          <div class="form-row">
+            <label>Name
+              <input type="text" name="from_name" required />
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Email
+              <input type="email" name="reply_to" required />
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Subject
+              <input type="text" name="subject" required />
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Message
+              <textarea name="message" rows="4" required></textarea>
+            </label>
+          </div>
+          <button type="submit" class="primary-btn">Send message</button>
+          <p class="form-note">Messages are delivered securely using EmailJS.</p>
+        </form>
+      </div>
+
+      <div id="feedback" class="feedback-section">
+        <h2>Feedback</h2>
+        <p>Rate AuroraWave and suggest improvements.</p>
+        <form id="feedback-form" class="card-form">
+          <div class="form-row">
+            <label>Name
+              <input type="text" name="from_name" required />
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Email
+              <input type="email" name="reply_to" />
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Rating
+              <select name="rating" required>
+                <option value="">Select…</option>
+                <option>⭐</option>
+                <option>⭐⭐</option>
+                <option>⭐⭐⭐</option>
+                <option>⭐⭐⭐⭐</option>
+                <option>⭐⭐⭐⭐⭐</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-row">
+            <label>What worked well?
+              <textarea name="good" rows="3"></textarea>
+            </label>
+          </div>
+          <div class="form-row">
+            <label>What should be better?
+              <textarea name="bad" rows="3"></textarea>
+            </label>
+          </div>
+          <button type="submit" class="secondary-btn">Submit feedback</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>© <span id="year"></span> AuroraWave. Built with Web Audio API.</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
